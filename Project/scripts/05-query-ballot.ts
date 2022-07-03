@@ -22,7 +22,7 @@ const main = async () => {
   const signer = wallet.connect(provider);
 
 
-
+    // TODO:  Add event queries
 
 
 

@@ -1,9 +1,31 @@
-node_modules
+# Sensitive or Too Big Files
 .env
+node_modules
+package-lock.json
 coverage
 coverage.json
 typechain
+*.pnp*
+yarn.lock
+hardhat.config*
+.gitignore
 
-#Hardhat files
+# Hardhat files
 cache
 artifacts
+
+
+# private files and notes
+/resources
+private-notes.txt
+*example*
+*.psd
+*.txt
+*.zip
+*.svg
+/trash
+/stream*
+*key*
+/assets
+api.php
+/src/vendor
