@@ -6,7 +6,9 @@ import { ethers } from "hardhat";
 import { CustomBallot, MyToken } from "../typechain";
 
 const PROPOSALS = ["Proposal 1", "Proposal 2", "Proposal 3"];
-const BASE_VOTE_POWER = 10;
+const TEST = .55555
+
+const BASE_VOTE_POWER = "10";
 const PROPOSAL_CHOSEN = [0, 1, 2];
 const USED_VOTE_POWER = 5;
 const ACCOUNTS_FOR_TESTING = 3;
@@ -25,9 +27,12 @@ describe("Ballot", function () {
   let tokenContractFactory: any;
   let tokenContract: MyToken;
   let accounts: SignerWithAddress[];
+  let voteTx: any;
 
   beforeEach(async () => {
     accounts = await ethers.getSigners();
+
+    //NB: Ballot Not Deployed!
     [ballotFactory, tokenContractFactory] = await Promise.all([
       ethers.getContractFactory("CustomBallot"),
       ethers.getContractFactory("MyToken"),
@@ -36,21 +41,32 @@ describe("Ballot", function () {
     await tokenContract.deployed();
   });
 
+
+  //TEST ERC20 TOKEN
   describe("when voting power is given", async () => {
+
     it("updates votes correctly", async () => {
       const preMintVotePower = await tokenContract.getVotes(
         accounts[1].address
       );
       expect(preMintVotePower).to.eq(0);
+
+      //Mint Number of Tokens Required to Vote for Address 1:
       const mintTx = await tokenContract.mint(
         accounts[1].address,
-        ethers.utils.parseEther(BASE_VOTE_POWER.toFixed(18))
+        ethers.utils.parseEther(BASE_VOTE_POWER)
       );
       await mintTx.wait();
+
+
+      //Check voting power after Minting tokens for user 1
       const postMintVotePower = await tokenContract.getVotes(
         accounts[1].address
       );
       expect(postMintVotePower).to.eq(0);
+
+
+      //User 1 Must Self Delegate Tokens to Obtain Voting Power     
       const delegateTx = await tokenContract
         .connect(accounts[1])
         .delegate(accounts[1].address);
@@ -58,18 +74,21 @@ describe("Ballot", function () {
       const postDelegateVotePower = await tokenContract.getVotes(
         accounts[1].address
       );
-      expect(Number(ethers.utils.formatEther(postDelegateVotePower))).to.eq(
-        BASE_VOTE_POWER
-      );
-      const historicVotePower = await tokenContract.getPastVotes(
-        accounts[1].address,
-        2
-      );
+      expect(Number(ethers.utils.formatEther(postDelegateVotePower))).to.eq( +BASE_VOTE_POWER );
+
+
+      //How is this diff from snapshots?
+      const historicVotePower = await tokenContract.getPastVotes(accounts[1].address, 2);
       expect(Number(ethers.utils.formatEther(historicVotePower))).to.eq(0);
     });
   });
 
+
+
+
+
   describe("when the ballot contract is deployed", async () => {
+
     beforeEach(async () => {
       ballotContract = await ballotFactory.deploy(
         convertStringArrayToBytes32(PROPOSALS),
@@ -96,7 +115,7 @@ describe("Ballot", function () {
         for (let index = 0; index <= batch; index++) {
           const mintTx = await tokenContract.mint(
             accounts[index + 1].address,
-            BASE_VOTE_POWER
+            +BASE_VOTE_POWER
           );
           await mintTx.wait();
           const delegateTx = await tokenContract
@@ -116,32 +135,42 @@ describe("Ballot", function () {
         });
 
         for (let index = 0; index < ACCOUNTS_FOR_TESTING; index++) {
+
           describe(`when the account ${index + 1} votes`, async () => {
             const expectedVotes = [0, 0, 0];
             if (index <= batch) {
-              beforeEach(async () => {
-                const voteTx = await ballotContract
-                  .connect(accounts[index + 1])
-                  .vote(PROPOSAL_CHOSEN[index], USED_VOTE_POWER);
-                await voteTx.wait();
-                expectedVotes[PROPOSAL_CHOSEN[index]] += USED_VOTE_POWER;
-              });
+ 
+              it("triggers the Voted event and updates the votes for that proposal", async () => {
 
-              it("updates the votes for that proposal", async () => {
+                expect( await ballotContract.connect(accounts[index + 1]).vote(PROPOSAL_CHOSEN[index], USED_VOTE_POWER) )
+                .to.emit(ballotContract, "Voted")
+                .withArgs(accounts[index + 1].address, PROPOSAL_CHOSEN[index], USED_VOTE_POWER, 1);
+                
+                expectedVotes[PROPOSAL_CHOSEN[index]] += USED_VOTE_POWER;
+                
                 const votedProposal = await ballotContract.proposals(
                   PROPOSAL_CHOSEN[index]
                 );
                 expect(votedProposal.voteCount).to.eq(
                   expectedVotes[PROPOSAL_CHOSEN[index]]
                 );
+                console.log('Vote Count: ' + votedProposal.voteCount )
+          
               });
 
-              it("updates the spent votes for that account", async () => {
+              it("triggers the Voted event and updates the spent votes for that account", async () => {
+
+                expect( await ballotContract.connect(accounts[index + 1]).vote(PROPOSAL_CHOSEN[index], USED_VOTE_POWER) )
+                  .to.emit(ballotContract, "Voted")
+                  .withArgs(accounts[index + 1].address, PROPOSAL_CHOSEN[index], USED_VOTE_POWER, 1);
+                  expectedVotes[PROPOSAL_CHOSEN[index]] += USED_VOTE_POWER;
+
                 const spentVotes = await ballotContract.spentVotePower(
                   accounts[index + 1].address
                 );
                 expect(spentVotes).to.eq(USED_VOTE_POWER);
               });
+
             } else {
               it("fails", async () => {
                 await expect(
