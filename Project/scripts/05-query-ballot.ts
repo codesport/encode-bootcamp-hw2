@@ -23,6 +23,7 @@ const main = async () => {
 
 
     // TODO:  Add event queries
+    // TODO: create ballots from snapshots, interact with the ballots and inspect result
 
 
 
