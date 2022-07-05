@@ -109,36 +109,34 @@ const main = async () => {
 	})
 
 	//6. Event filters using provider
-	let filter2 = {
-		address: ballotAddress ,
-		topics: [	
-			// the name of the event, parnetheses containing the data type of each event, no spaces
-			ethers.utils.id("Voted(address,unit256,uint256,uint256)")
-		]
-	}
-	provider.on(filter2, (voter, proposal, weight, proposalVotes,event) => {
-		// do whatever you want here
-		// I'm pretty sure this returns a promise, so don't forget to resolve it
-		console.log('6. Event filters using provider:')
-		let filter2Data: any[] =[]
+	// let filter2 = {
+	// 	address: ballotAddress ,
+	// 	topics: [	
+	// 		// the name of the event, parnetheses containing the data type of each event, no spaces
+	// 		ethers.utils.id("Voted(address,unit256,uint256,uint256)")
+	// 	]
+	// }
+	// provider.on(filter2, (voter, proposal, weight, proposalVotes,event) => {
+	// 	// do whatever you want here
+	// 	// I'm pretty sure this returns a promise, so don't forget to resolve it
+	// 	console.log('6. Event filters using provider:')
+	// 	let filter2Data: any[] =[]
 
-		filter2Data.push({
-			voterAddress: voter, 
-			proposalVotedOn: proposal,//ethers.utils.parseBytes32String(proposalFilterObj), 
-			votesAllocated: weight, 
-			totalVotesReceived: proposalVotes 
-		})
+	// 	filter2Data.push({
+	// 		voterAddress: voter, 
+	// 		proposalVotedOn: proposal,//ethers.utils.parseBytes32String(proposalFilterObj), 
+	// 		votesAllocated: weight, 
+	// 		totalVotesReceived: proposalVotes 
+	// 	})
 
 
-		console.log('6. Event filters using provider:')
-		console.log(filter2Data)
+	// 	console.log('6. Event filters using provider:')
+	// 	console.log(filter2Data)
 
-	})
+	// })
 
-	//06. Setup Event Listeners: https://docs.ethers.io/v4/api-contract.html#contract-event-filters
+	//6. Setup Event Listeners: https://docs.ethers.io/v4/api-contract.html#contract-event-filters
 	ballotContract.on("Voted", (voter, proposal, weight, proposalVotes, event) => {
-
-		
 		console.log('QUERY 4. This is an Event Listner:')
 		// Called when anyone changes the value
 		console.log( `Event Listener for QUERY 4: ${voter}, vote on proposal id  ${proposal}` );
@@ -146,11 +144,6 @@ const main = async () => {
 		console.log("Event Listener for QUERY 4: Block Number " + event.blockNumber);
 		// 4115004
 	});	
-
-
-
-	
-
 
 	/**
 	 *  If Getter function were provide, access solidity array with a map
@@ -171,11 +164,6 @@ const main = async () => {
     //   console.log( `Proposal ${index} Vote Count: ${singleItem.voteCount}` )
 
     // )
-
-
-
-
-
 
 }
 
