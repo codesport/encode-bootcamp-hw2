@@ -28,9 +28,11 @@ const main = async () => {
 	const provider = ethers.providers.getDefaultProvider("ropsten");
 	const signer = wallet.connect(provider);
 
+
 	//2. Read CLI Arguments
 	if (process.argv.length < 3) throw new Error("missing ballot address as arg");
 	const ballotAddress = process.argv[2];
+
 
 	//3. Create Contract Instance/Instantiate Contract
 	const ballotContract = new ethers.Contract(
@@ -39,8 +41,7 @@ const main = async () => {
 		signer
 	) as CustomBallot;
 
-
-
+	
 	//4. Manually Query Public Vatiables
 	/**
 	 * Hack to access Solidity array without a getter
@@ -106,33 +107,6 @@ const main = async () => {
 	
 	})
 
-	//6. Event filters using provider
-	// let filter2 = {
-	// 	address: ballotAddress ,
-	// 	topics: [	
-	// 		// the name of the event, parnetheses containing the data type of each event, no spaces
-	// 		ethers.utils.id("Voted(address,unit256,uint256,uint256)")
-	// 	]
-	// }
-	// provider.on(filter2, (voter, proposal, weight, proposalVotes,event) => {
-	// 	// do whatever you want here
-	// 	// I'm pretty sure this returns a promise, so don't forget to resolve it
-	// 	console.log('6. Event filters using provider:')
-	// 	let filter2Data: any[] =[]
-
-	// 	filter2Data.push({
-	// 		voterAddress: voter, 
-	// 		proposalVotedOn: proposal,//ethers.utils.parseBytes32String(proposalFilterObj), 
-	// 		votesAllocated: weight, 
-	// 		totalVotesReceived: proposalVotes 
-	// 	})
-
-
-	// 	console.log('6. Event filters using provider:')
-	// 	console.log(filter2Data)
-
-	// })
-
 	//6. Setup Event Listeners: https://docs.ethers.io/v4/api-contract.html#contract-event-filters
 	ballotContract.on("Voted", (voter, proposal, weight, proposalVotes, event) => {
 		console.log('QUERY 4. This is an Event Listner:')
@@ -169,3 +143,30 @@ main().catch((error) => {
 	console.error(error);
 	process.exitCode = 1;
 });
+
+	//6. Event filters using provider
+	// let filter2 = {
+	// 	address: ballotAddress ,
+	// 	topics: [	
+	// 		// the name of the event, parnetheses containing the data type of each event, no spaces
+	// 		ethers.utils.id("Voted(address,unit256,uint256,uint256)")
+	// 	]
+	// }
+	// provider.on(filter2, (voter, proposal, weight, proposalVotes,event) => {
+	// 	// do whatever you want here
+	// 	// I'm pretty sure this returns a promise, so don't forget to resolve it
+	// 	console.log('6. Event filters using provider:')
+	// 	let filter2Data: any[] =[]
+
+	// 	filter2Data.push({
+	// 		voterAddress: voter, 
+	// 		proposalVotedOn: proposal,//ethers.utils.parseBytes32String(proposalFilterObj), 
+	// 		votesAllocated: weight, 
+	// 		totalVotesReceived: proposalVotes 
+	// 	})
+
+
+	// 	console.log('6. Event filters using provider:')
+	// 	console.log(filter2Data)
+
+	// })
