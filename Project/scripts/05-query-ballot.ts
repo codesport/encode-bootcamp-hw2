@@ -41,7 +41,7 @@ const main = async () => {
 		signer
 	) as CustomBallot;
 
-	
+
 	//4. Manually Query Public Vatiables
 	/**
 	 * Hack to access Solidity array without a getter
@@ -118,7 +118,7 @@ const main = async () => {
 	});	
 
 	/**
-	 *  If Getter function were provide, access solidity array with a map
+	 * If Getter function were provided, access solidity array with a map
 	 * can only iterate arrays on blockchain that has an explicit getter function
 	 */
     // const proposalArrayOfStructsObj = await ballotContract.proposals()
@@ -130,11 +130,9 @@ const main = async () => {
     //     }
     // ))
 
-
     // proposalStatusArrayOfObj.map( singleItem, index =>
     //   console.log( `Proposal ${index} Name: ${convertStringArrayToBytes32(singleItem.proposalName)}` )
     //   console.log( `Proposal ${index} Vote Count: ${singleItem.voteCount}` )
-
     // )
 
 }
