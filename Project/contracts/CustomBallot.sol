@@ -50,10 +50,22 @@ contract CustomBallot {
         }
     }
 
-    function winnerName() external view returns (bytes32 winnerName_) {
+    /**
+    * @dev NB: return is implicit b/c no return statement in function
+    *
+    * Explicit (in function Body): return winnerName
+    * Implicit (in func signature): function winnerName() external view returns (bytes32 winnerName_)
+    */
+    function winnerName() external view returns (bytes32 winnerName_) { 
         winnerName_ = proposals[winningProposal()].name;
     }
 
+    /**
+    * @dev NB: return is implicit b/c no return statement in function
+    *
+    * Explicit (in function Body): return votingPower_
+    * Implicit (in func signature): function votingPower() public view returns (uint256 votingPower_)
+    */
     function votingPower() public view returns (uint256 votingPower_) {
         votingPower_ =
             voteToken.getPastVotes(msg.sender, referenceBlock) -

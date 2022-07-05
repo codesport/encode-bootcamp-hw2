@@ -7,7 +7,9 @@ import * as ballotJson from "../artifacts/contracts/CustomBallot.sol/CustomBallo
 
 const EXPOSED_KEY = "8da4ef21b864d2cc526dbdb2a120bd2874c36c9d0a1fb7f8c63d7f7a8b41de8f";
 
-const TOKEN_ADDRESS = "0x8FF0e8bf8332784A7B718706666321A1ee2722fC"
+const TOKEN_ADDRESS_ = "0x8FF0e8bf8332784A7B718706666321A1ee2722fC"
+
+const TOKEN_ADDRESS = "0xcb83Ee7c6ED34881815946b205650D9Ec1b60594"
 
 // https://gist.github.com/joeytwiddle/37d2085425c049629b80956d3c618971#do-not-use-foreach-with-async-await
 ////let PROPOSALS = ["Proposal 1", "Proposal 2", "Proposal 3"];

@@ -1,14 +1,14 @@
 import { ethers } from "ethers";
 import "dotenv/config";
 import * as ballotJson from "../artifacts/contracts/CustomBallot.sol/CustomBallot.json";
-// eslint-disable-next-line node/no-missing-import
-// TypeScript
 import { CustomBallot } from "../typechain";
 
 
 // yarn ts-node scripts/04-cast-vote.ts 0xBalllotAddress ProposalNumber VotingPowerAmount
 
 //Ballot Contract Address: 0xFD00178690757B3A8Da935F932b6Fd1804f38264
+
+//NEW Ballot Contract Address: 0x0fF32019bf03528451b41CbA75206Ca8CF6D8D52
 
 const EXPOSED_KEY = "8da4ef21b864d2cc526dbdb2a120bd2874c36c9d0a1fb7f8c63d7f7a8b41de8f";
 
@@ -46,7 +46,7 @@ const main = async () => {
 
 
   try {
-    const tx = await ballotContract.vote(+proposal, usedVotePower);
+    const tx = await ballotContract.vote(+proposal, ethers.utils.parseEther(usedVotePower) );
     console.log("Waiting for confirmation");
     await tx.wait();
     console.log(`Vote Transaction Completed. Hash: ${tx.hash}`);

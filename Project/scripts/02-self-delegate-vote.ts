@@ -10,6 +10,8 @@ import { MyToken } from "../typechain";
 
 //Token Contract Address:  0x8FF0e8bf8332784A7B718706666321A1ee2722fC
 
+//New Token Contract Address: 0xcb83Ee7c6ED34881815946b205650D9Ec1b60594
+
 const EXPOSED_KEY = "8da4ef21b864d2cc526dbdb2a120bd2874c36c9d0a1fb7f8c63d7f7a8b41de8f";
 
 const main = async () => {
