@@ -79,12 +79,10 @@ const main = async () => {
 
 
 
-
-	//5. Event Filters using contract object
+	//5. Event Filters using contract object: https://docs.ethers.io/v4/api-contract.html#contract-event-filters
 	let filter1 = ballotContract.filters.Voted(null) //null tells us to "filter" on any wallet address. Add specific address if needed
 	let filter1Data: any[] =[] // iterative
 	
-
 	ballotContract.on(filter1, (voter, proposal, weight, proposalVotes, event) => {
 
 		const name = async () =>{
